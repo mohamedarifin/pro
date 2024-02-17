@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        img{
+            width: 150px;
+            aspect-ratio: 1/1;
+        }
+        body{
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:linear-gradient(to bottom right,black,rgb(40, 3, 95));
+
+        }
+        .container{
+           background: linear-gradient(blue,rgb(90, 0, 90),rgb(50, 225, 225),rgb(241, 245, 245));
+            width: 280px;
+            height: 430px;
+            border-radius: 10px;
+            border: 3px solid rgba(17, 127, 196, 0.74);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 10px;
+
+        }
+        .searchbar{
+            display: flex;
+            width: 100%;
+            margin-bottom:15px;
+            margin-top: 10px;
+        }
+        .searchbar input{
+            width: 100%;
+            font-size: 20px;
+            padding: 5px 5px;
+            height: 30px;
+        }
+        .search_btn img{
+            height: 29px;
+            width: 29px;
+            padding: 5px;
+            font-size: 20px;
+            background: white;
+            border-radius: 5px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        .temperture{
+            font-size: 40px;
+        }
+        .city_name{
+            font-size: 35px;
+        }
+        .bottom_cont{
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .humidity_cont{
+            width: 50%;
+            display: flex;
+        }
+
+
+        .wind_cont{
+            width: 50%;
+            display: flex;
+            justify-content: end;
+
+        }
+            
+            
+        .humi_img img,.wind_img img{
+            height: 50px;
+            width: 50px;
+        }
+        .weather_type{
+            font-size: 20px;
+        }
+        .img_con{
+            position: relative;
+            width: 150px;
+            aspect-ratio: 1/1;
+        }
+        .weather_style{
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        @media all and (max-width:306px){
+            .container{
+                width:100%;
+                padding: 20px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="searchbar">
+            <input type="text">
+            <div class="search_btn"><img src="D:\work\weather\search.png" alt=""></div>
+        </div>
+        <div class="img_con">
+            <img class="sun" src="clear sky.png" alt="">
+            
+        </div>
+        <div class="temperture">35℃</div>
+        <div class="city_name">india</div>
+        <div class="weather_type">sun</div>
+        <div class="bottom_cont">
+            <div class="humidity_cont">
+                
+                <div class="humi_value">
+                    <p class="humi_num">4%</p>
+                    <p class="humi_name">humidity</p>
+                </div>
+                <div class="humi_img">
+                    <img class="wind" src="D:\work\weather\humidity.png" alt="">
+                </div>
+            </div>
+            <div class="wind_cont">
+                <div class="wind_img">
+                    <img class="wind" src="wind.png" alt="">
+                </div>
+                <div class="wind_value">
+                    <p class="wind_num">0.9%</p>
+                    <p class="wind_name">wind</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+   
+
+    <script>
+    var weath = async (city)=>{
+        var curr_weather = 'https://api.openweathermap.org/data/2.5/weather?q='+city+'&appid=986d98995af4f8ef8086cf920fa5393d&units=metric';
+        var get = await fetch(curr_weather)
+        var convert = get.json();
+        return convert;
+    }
+    async function weatherfun()
+    {
+        var searchbar = document.querySelector(".searchbar input").value
+        
+        await weath(searchbar)
+        .then((we)=>{
+        console.log(we,"latitude :",we.coord.lat)
+        console.log( "longitude :",we.coord.lon)
+        console.log("latitude :",we.coord.lat)
+        var city_name = document.querySelector(".city_name").innerHTML = we.name;
+        var weather_type = document.querySelector(".weather_type").innerHTML = we.weather[0].description;
+        var temperture = document.querySelector(".temperture").innerHTML = we.main.temp+"℃";
+        var humi_num = document.querySelector(".humi_num").innerHTML = we.main.humidity+"%";
+        var wind_num = document.querySelector(".wind_num").innerHTML = we.wind.speed+"%";
+        
+        var create_img = document.createElement("img")
+      
+      create_img.src = `${we.weather[0].description}.png`
+      create_img.classList.add("weather_style")
+      var img_con = document.querySelector(".img_con");
+      
+      img_con.appendChild(create_img)
+      var imgss = document.querySelectorAll(".img_con img")
+
+        imgss.forEach((i) => {
+            i.style.display ="none"
+        })
+        var create_img = document.createElement("img")
+      
+      create_img.src = `${we.weather[0].description}.png`
+      create_img.classList.add("weather_style")
+        img_con.appendChild(create_img)
+        // mist
+      
+      
+      var weatherimage = document.querySelector("create_img")
+      
+            
+    })
+    .catch(()=>{
+
+    })
+
+    }
+   
+
+    var search_btn = document.querySelector(".search_btn")
+
+    search_btn.addEventListener("click",()=>{
+        weatherfun()
+      
+        
+    })
+    
+    
+    </script>
+</body>
+</html>
